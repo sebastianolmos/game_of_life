@@ -2,19 +2,30 @@
 //
 
 #include <iostream>
+#include <stdlib.h>
+#include <windows.h>
+#include <ctime>
+#include <random>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+
+float getValue(int max)
+{   
+    std::mt19937_64 gen{ std::random_device()() };
+    std::uniform_real_distribution<double> dis{ 0.0, double(max) };
+    float value = float (dis(gen));
+    return value;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+int main(int argc, char* argv[])
+{
+    int input;
+    if (argc < 2) 
+    {
+        input = 1;
+    }
+    else {
+        input = atoi(argv[1]);
+    }
+    float output = getValue(input);
+    std::cout << output << std::endl;
+}

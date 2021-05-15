@@ -1,1 +1,0 @@
-"""Grafico con los valores obtenidos en la implementacion serial en CPU"""
