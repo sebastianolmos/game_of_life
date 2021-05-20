@@ -13,6 +13,7 @@ ubyte* resultData;
 size_t worldHeight;
 size_t worldWidth;
 size_t dataLength;
+size_t iterations;
 
 
 void initBuffers() {
@@ -20,7 +21,7 @@ void initBuffers() {
     resultData = new ubyte[worldHeight * worldWidth];
     dataLength = worldWidth * worldHeight;
 
-    for (size_t i = 0; i < worldHeight; i++) {
+    for (size_t i = 0; i < dataLength; i++) {
         data[i] = rand() & 1;
         resultData[i] = 0;
     }
@@ -49,16 +50,24 @@ void worldIteration() {
     std::swap(data, resultData);
 }
 
+void runGameLife() {
+    for (size_t i = 0; i < iterations; i++) {
+        worldIteration();
+    }
+}
+
 int main(int argc, char* argv[])
 {
-    if (argc < 3)
+    if (argc < 4)
     {
         worldWidth = 100;
         worldHeight = 100;
+        iterations = 1;
     }
     else {
         worldWidth = atoi(argv[1]);
         worldHeight = atoi(argv[2]);
+        iterations = atoi(argv[3]);
     }
     /* initialize random seed: */
     srand(time(NULL));
@@ -67,8 +76,8 @@ int main(int argc, char* argv[])
     initBuffers();
 
     auto start = std::chrono::steady_clock::now();
-    // Se ejecuta una iteracion
-    worldIteration();
+    // Se ejecuta el juego
+    runGameLife();
     auto end = std::chrono::steady_clock::now();
     // nanoseconds
     // microseconds
