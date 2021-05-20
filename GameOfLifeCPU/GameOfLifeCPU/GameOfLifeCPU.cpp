@@ -33,7 +33,10 @@ ubyte countAliveCells(size_t x0, size_t x1, size_t x2, size_t y0, size_t y1, siz
     return result;
 }
 
-void worldIteration() {
+double worldIteration() {
+    double itime = 0.0;
+    auto start = std::chrono::steady_clock::now();
+
     for (size_t j = 0; j < worldHeight; j++) {
         size_t y0 = ((j - 1 + worldHeight) % worldHeight) * worldWidth;
         size_t y1 = j * worldWidth;
@@ -47,21 +50,26 @@ void worldIteration() {
             resultData[y1 + x] = aliveCells == 3 || (aliveCells == 2 && data[y1 + x]) ? 1 : 0;
         }
     }
+    auto end = std::chrono::steady_clock::now();
+    itime = (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
     std::swap(data, resultData);
+    return itime;
 }
 
-void runGameLife() {
+double runGameLife() {
+    double totalTime = 0.0;
     for (size_t i = 0; i < iterations; i++) {
-        worldIteration();
+        totalTime += worldIteration();
     }
+    return totalTime;
 }
 
 int main(int argc, char* argv[])
 {
     if (argc < 4)
     {
-        worldWidth = 100;
-        worldHeight = 100;
+        worldWidth = 1000;
+        worldHeight = 1000;
         iterations = 1;
     }
     else {
@@ -75,13 +83,11 @@ int main(int argc, char* argv[])
     // Se inicializan los buffers
     initBuffers();
 
-    auto start = std::chrono::steady_clock::now();
     // Se ejecuta el juego
-    runGameLife();
-    auto end = std::chrono::steady_clock::now();
+    double gameTime = runGameLife();
     // nanoseconds
     // microseconds
     // milliseconds
 
-    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << gameTime;
 }
