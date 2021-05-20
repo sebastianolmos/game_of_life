@@ -9,153 +9,157 @@
 #include <time.h> 
 
 typedef unsigned char ubyte;
+typedef unsigned short ushort;
+typedef unsigned int uint;
 
-void initBuffers(ubyte*& data, ubyte*& resultData, size_t worldWidth, size_t worldHeight) {
-    data = new ubyte[worldHeight * worldWidth];
-    resultData = new ubyte[worldHeight * worldWidth];
+void initBuffers(ubyte*& data, size_t worldWidth, size_t worldHeight) {
     size_t dataLength = worldWidth * worldHeight;
 
     for (size_t i = 0; i < dataLength; i++) {
-        data[i] = rand() & 1;;
-        resultData[i] = 0;
+        data[i] = rand() & 1;
     }
 }
 
-cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);
 
-__global__ void addKernel(int *c, const int *a, const int *b)
+__global__ void gameKernel(const ubyte* data, ubyte* resultData, uint worldWidth, uint worldHeight)
 {
-    int i = threadIdx.x;
-    c[i] = a[i] + b[i];
+    uint worldSize = worldWidth * worldHeight;
+    
+    uint cell = __mul24(blockIdx.x, blockDim.x) + threadIdx.x;
+    for (cell; cell < worldSize; cell += blockDim.x * gridDim.x) {
+        uint x = cell % worldWidth;
+        uint y = cell - x;
+        uint xLeft = (x + worldWidth - 1) % worldWidth;
+        uint xRight = (x + 1) % worldWidth;
+        uint yUp = (y + worldSize - worldWidth) % worldSize;
+        uint yDown = (y + worldWidth) % worldSize;
+
+        uint aliveCells = data[xLeft + yUp] + data[x + yUp] + data[xRight + yUp] + data[xLeft + y]
+            + data[xRight + y] + data[xLeft + yDown] + data[x + yDown] + data[xRight + yDown];
+
+        resultData[x + y] = aliveCells == 3 || (aliveCells == 2 && data[x + y]) ? 1 : 0;
+    }
+}
+
+double runGameKernel(ubyte*& d_data, ubyte*& d_resultData, size_t worldWidth,
+    size_t worldHeight, size_t iterations, ushort threads) {
+
+    size_t calcBlocks = (worldWidth * worldHeight) / threads;
+    ushort blocks = (ushort)std::min((size_t)32768, calcBlocks);
+    cudaEvent_t start, stop;
+    double totalTime = 0.0;
+
+    for (size_t i = 0; i < iterations; i++) {
+        cudaEventCreate(&start);
+        cudaEventCreate(&stop);
+
+        cudaEventRecord(start);
+        gameKernel <<<blocks, threads >>> (d_data, d_resultData, worldWidth, worldHeight);
+        cudaEventRecord(stop);
+
+        cudaEventSynchronize(stop);
+        float milliseconds = 0;
+        cudaEventElapsedTime(&milliseconds, start, stop);
+        double gpuTime = (double)milliseconds / 1000;
+        totalTime += gpuTime;
+
+        std::swap(d_data, d_resultData);
+    }
+    return totalTime;
 }
 
 int main(int argc, char* argv[])
 {   
+    // Error code to check return values for CUDA calls
+    cudaError_t err = cudaSuccess;
+
     ubyte* h_data;
     ubyte* h_resultData;
 
     size_t worldHeight;
     size_t worldWidth;
     size_t dataLength;
+    size_t iterations;
+    ushort threads;
 
-    if (argc < 3)
+    if (argc < 5)
     {
         worldWidth = 100;
         worldHeight = 100;
+        iterations = 10;
+        threads = 32;
     }
     else {
         worldWidth = atoi(argv[1]);
         worldHeight = atoi(argv[2]);
+        iterations = atoi(argv[3]);
+        threads = atoi(argv[4]);
     }
 
     dataLength = worldWidth * worldHeight;
+    size_t size = dataLength * sizeof(ubyte);
+
+    // Pedir memoria para el host input data
+    h_data = new ubyte[dataLength];
+
+    // Pedir memoria para el host output resultData
+    h_resultData = new ubyte[dataLength];
+
+    // Verificar si se inicializaron correctamente 
+    if (h_data == NULL || h_resultData == NULL)
+    {
+        fprintf(stderr, "Failed to allocate host vectors:\n");
+        exit(EXIT_FAILURE);
+    }
 
     /* initialize random seed: */
     srand(time(NULL));
-    initBuffers(h_data, h_resultData, worldWidth, worldHeight);
+    // Se inicializan los buffers del host
+    initBuffers(h_data, worldWidth, worldHeight);
 
-    const int arraySize = 5;
-    const int a[arraySize] = { 1, 2, 3, 4, 5 };
-    const int b[arraySize] = { 10, 20, 30, 40, 50 };
-    int c[arraySize] = { 0 };
+    // Alojar el device input d_data
+    ubyte* d_data = NULL;
+    err = cudaMalloc((void**)&d_data, size);
 
-    // Add vectors in parallel.
-    cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "addWithCuda failed!");
-        return 1;
+    // Verificar que el vector data se alojo correctamente en el device
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to allocate device vector data (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
     }
 
-    printf("{1,2,3,4,5} + {10,20,30,40,50} = {%d,%d,%d,%d,%d}\n",
-        c[0], c[1], c[2], c[3], c[4]);
+    // Alojar el device output d_resultData
+    ubyte* d_resultData = NULL;
+    err = cudaMalloc((void**)&d_resultData, size);
 
-    // cudaDeviceReset must be called before exiting in order for profiling and
-    // tracing tools such as Nsight and Visual Profiler to show complete traces.
-    cudaStatus = cudaDeviceReset();
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaDeviceReset failed!");
-        return 1;
+    // Verificar que el vector resultData se alojo correctamente en el device
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to allocate device vector resultData (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
     }
 
-    return 0;
-}
+    // Copy the host input vector data in host memory to the device input vector in device memory
+    err = cudaMemcpy(d_data, h_data, size, cudaMemcpyHostToDevice);
 
-// Helper function for using CUDA to add vectors in parallel.
-cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)
-{
-    int *dev_a = 0;
-    int *dev_b = 0;
-    int *dev_c = 0;
-    cudaError_t cudaStatus;
-
-    // Choose which GPU to run on, change this on a multi-GPU system.
-    cudaStatus = cudaSetDevice(0);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?");
-        goto Error;
-    }
-
-    // Allocate GPU buffers for three vectors (two input, one output)    .
-    cudaStatus = cudaMalloc((void**)&dev_c, size * sizeof(int));
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMalloc failed!");
-        goto Error;
-    }
-
-    cudaStatus = cudaMalloc((void**)&dev_a, size * sizeof(int));
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMalloc failed!");
-        goto Error;
-    }
-
-    cudaStatus = cudaMalloc((void**)&dev_b, size * sizeof(int));
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMalloc failed!");
-        goto Error;
-    }
-
-    // Copy input vectors from host memory to GPU buffers.
-    cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy failed!");
-        goto Error;
-    }
-
-    cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy failed!");
-        goto Error;
-    }
-
-    // Launch a kernel on the GPU with one thread for each element.
-    addKernel<<<1, size>>>(dev_c, dev_a, dev_b);
-
-    // Check for any errors launching the kernel
-    cudaStatus = cudaGetLastError();
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
-        goto Error;
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to copy vector data from host to device (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
     }
     
-    // cudaDeviceSynchronize waits for the kernel to finish, and returns
-    // any errors encountered during the launch.
-    cudaStatus = cudaDeviceSynchronize();
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching addKernel!\n", cudaStatus);
-        goto Error;
+    double time;
+    // Launch the game kernel
+    time = runGameKernel(d_data, d_resultData, worldWidth, worldHeight, iterations, threads);
+    err = cudaGetLastError();
+
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to launch game kernel (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
     }
 
-    // Copy output vector from GPU buffer to host memory.
-    cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy failed!");
-        goto Error;
-    }
+    // Print the output time
+    std::cout << time;
 
-Error:
-    cudaFree(dev_c);
-    cudaFree(dev_a);
-    cudaFree(dev_b);
-    
-    return cudaStatus;
 }
