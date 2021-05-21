@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdlib.h>
 #include <time.h> 
+#include <chrono>
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_ENABLE_PROGRAM_CONSTRUCTION_FROM_ARRAY_COMPATIBILITY
@@ -27,7 +28,7 @@ void initBuffers(ubyte*& data, size_t worldWidth, size_t worldHeight) {
     }
 }
 
-int main(int argc, char* argv[])
+int iterator(int argc, char* argv[])
 {
 
 	ubyte* h_data;
@@ -43,8 +44,8 @@ int main(int argc, char* argv[])
 	{
 		worldWidth = 1024;
 		worldHeight = 1024;
-		iterations = 10;
-		threads = 32;
+		iterations = 30;
+		threads = 256;
 	}
 	else {
 		worldWidth = atoi(argv[1]);
@@ -78,7 +79,6 @@ int main(int argc, char* argv[])
 	int platform_id = 0, device_id = 0;
 
 	try {
-
 		// Query for platforms
 		std::vector<cl::Platform> platforms;
 		cl::Platform::get(&platforms);
@@ -95,9 +95,10 @@ int main(int argc, char* argv[])
 		// Select the device.
 		cl::CommandQueue queue = cl::CommandQueue(context, devices[device_id]);
 
+		
 		// Create the memory buffers on the device
-		cl::Buffer d_data = cl::Buffer(context, CL_MEM_READ_ONLY, size);
-		cl::Buffer d_resultData = cl::Buffer(context, CL_MEM_WRITE_ONLY, size);
+		cl::Buffer d_data = cl::Buffer(context, CL_MEM_READ_WRITE, size);
+		cl::Buffer d_resultData = cl::Buffer(context, CL_MEM_READ_WRITE, size);
 		cl::Buffer d_worldWidth = cl::Buffer(context, CL_MEM_READ_ONLY, sizeof(size_t));
 		cl::Buffer d_worldHeight = cl::Buffer(context, CL_MEM_READ_ONLY, sizeof(size_t));
 
@@ -122,15 +123,54 @@ int main(int argc, char* argv[])
 		cl::Kernel gameKernel_kernel(program, "gameKernel");
 
 		// Set the kernel arguments
-		gameKernel_kernel.setArg(0, d_data);
-		gameKernel_kernel.setArg(1, d_resultData);
-		gameKernel_kernel.setArg(2, d_worldWidth);
-		gameKernel_kernel.setArg(3, d_worldHeight);
+		// gameKernel_kernel.setArg(0, d_data);
+		// gameKernel_kernel.setArg(1, d_resultData);
+		// gameKernel_kernel.setArg(2, d_worldWidth);
+		// gameKernel_kernel.setArg(3, d_worldHeight);
 
+		double totalTime = 0.0;
+		for (size_t i = 0; i < iterations; i++){
+			// Set the kernel arguments
+			if (i%2){
+				gameKernel_kernel.setArg(0, d_data);
+				gameKernel_kernel.setArg(1, d_resultData);
+			}
+			else {
+				gameKernel_kernel.setArg(0, d_resultData);
+				gameKernel_kernel.setArg(1, d_data);
+			}
+			gameKernel_kernel.setArg(2, d_worldWidth);
+			gameKernel_kernel.setArg(3, d_worldHeight);
+
+			// Execute the kernel
+			cl::NDRange global(dataLength);
+			cl::NDRange local(threads);
+
+			double itime = 0.0;
+			auto start = std::chrono::steady_clock::now();
+
+			queue.enqueueNDRangeKernel(gameKernel_kernel, cl::NullRange, global, local);
+			queue.finish();
+
+			auto end = std::chrono::steady_clock::now();
+			itime = (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+			totalTime += itime;
+		}
+		/*
 		// Execute the kernel
-		cl::NDRange global(dataLength);
-		cl::NDRange local(threads);
+		// cl::NDRange global(dataLength);
+		// cl::NDRange local(threads);
+
+		double itime = 0.0;
+		auto start = std::chrono::steady_clock::now();
+
 		queue.enqueueNDRangeKernel(gameKernel_kernel, cl::NullRange, global, local);
+		queue.finish();
+
+		auto end = std::chrono::steady_clock::now();
+		itime = (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+		*/
+		std::cout << totalTime << std::endl;
 
 		// Copy the output data back to the host
 		queue.enqueueReadBuffer(d_resultData, CL_TRUE, 0, size, h_resultData);
@@ -157,4 +197,9 @@ int main(int argc, char* argv[])
 	
 	std::cout << "Done.\n";
 	return(EXIT_SUCCESS);
+}
+
+int main(int argc, char* argv[]) {
+	iterator(argc, argv);
+	return 0;
 }
