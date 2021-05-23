@@ -10,10 +10,12 @@
 #define CL_HPP_ENABLE_PROGRAM_CONSTRUCTION_FROM_ARRAY_COMPATIBILITY
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 #define CL_HPP_TARGET_OPENCL_VERSION 120
+#define __CL_ENABLE_EXCEPTIONS
+
 #ifdef __APPLE__
 #include <OpenCL/opencl.hpp>
 #else
-#include <CL/opencl.hpp>
+#include <CL/cl.hpp>
 #endif
 
 typedef unsigned char ubyte;
@@ -90,6 +92,8 @@ int iterator(int argc, char* argv[])
 
 		// Create a context
 		cl::Context context(devices);
+
+		// std::cout << devices[0].getInfo<CL_DEVICE_NAME>() << std::endl;
 
 		// Create a command queue
 		// Select the device.
@@ -194,9 +198,6 @@ int iterator(int argc, char* argv[])
 		std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
 		return(EXIT_FAILURE);
 	}
-	
-	std::cout << "Done.\n";
-	return(EXIT_SUCCESS);
 }
 
 int main(int argc, char* argv[]) {

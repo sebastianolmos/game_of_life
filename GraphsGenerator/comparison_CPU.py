@@ -43,7 +43,7 @@ if __name__ == "__main__":
     line1 = ax.plot(n_size, n_eval1, 'r-o', label='CPU implementation')
     line2 = ax.plot(n_size, n_eval2, 'b-o', label='CPU ifs implementation')
 
-    ax.set(xlabel='Número de celulas', ylabel='Celulas evaluadas por segundo',
+    ax.set(xlabel='Número de celulas', ylabel='Celulas evaluadas por segundo (tpb)',
        title='Comparacion de tiempo promedio de iteracion entre implementaciones en CPU')
     ax.grid()
 
