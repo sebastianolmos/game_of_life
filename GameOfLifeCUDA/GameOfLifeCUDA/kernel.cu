@@ -60,7 +60,7 @@ double runGameKernel(ubyte*& d_data, ubyte*& d_resultData, size_t worldWidth,
         cudaEventSynchronize(stop);
         float milliseconds = 0;
         cudaEventElapsedTime(&milliseconds, start, stop);
-        double gpuTime = (double)milliseconds / 1000;
+        double gpuTime = (double)milliseconds;
         totalTime += gpuTime;
 
         std::swap(d_data, d_resultData);

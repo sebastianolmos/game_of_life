@@ -33,7 +33,7 @@ if __name__ == "__main__":
     ax.plot(n_size, n_eval, 'r-o')
 
     ax.set(xlabel='Número de celulas', ylabel='Celulas evaluadas por segundo',
-       title='Tiempo en que se demora una iteracion para distintos tamaños')
+       title='Tiempo promedio de iteracion con implementación secuencial en CPU ')
     ax.grid()
 
     fig.savefig("images/serial_CPU.png")

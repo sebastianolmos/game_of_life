@@ -1,4 +1,4 @@
-"""Grafico con los valores obtenidos en la implementacion serial en CPU"""
+"""Grafico con los valores obtenidos en la implementacion serial en CPU2 con ifs"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     size = []
     time = []
 
-    with open(path + 'serial_CPU.csv', mode='r') as csv_file:
+    with open(path + 'serial_CPU2.csv', mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         line_count = 0
         for row in csv_reader:
@@ -33,8 +33,8 @@ if __name__ == "__main__":
     ax.plot(n_size, n_eval, 'r-o')
 
     ax.set(xlabel='Número de celulas', ylabel='Celulas evaluadas por segundo',
-       title='Tiempo en que se demora una iteracion para distintos tamaños')
+       title='Tiempo promedio de iteracion con implementación secuencial en CPU 2')
     ax.grid()
 
-    fig.savefig("images/serial_CPU.png")
+    fig.savefig("images/serial_CPU2.png")
     plt.show()
