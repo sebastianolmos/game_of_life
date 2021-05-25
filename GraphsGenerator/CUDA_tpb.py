@@ -77,12 +77,12 @@ if __name__ == "__main__":
     n_time512 = np.array(time512)  
     n_time1024 = np.array(time1024)  
 
-    n_eval32 = n_size / n_time32
-    n_eval64 = n_size / n_time64
-    n_eval128 = n_size / n_time128
-    n_eval256 = n_size / n_time256
-    n_eval512 = n_size / n_time512
-    n_eval1024 = n_size / n_time1024
+    n_eval32 = n_size / n_time32 / 1000000
+    n_eval64 = n_size / n_time64 / 1000000
+    n_eval128 = n_size / n_time128 / 1000000
+    n_eval256 = n_size / n_time256 / 1000000
+    n_eval512 = n_size / n_time512 / 1000000
+    n_eval1024 = n_size / n_time1024 / 1000000
 
     fig, ax = plt.subplots(figsize=(10,7))
     
@@ -95,8 +95,8 @@ if __name__ == "__main__":
     line512 = ax.plot(n_size, n_eval512, 'm-o', label='512 tbp')
     line1024 = ax.plot(n_size, n_eval1024, 'c-o', label='1024 tbp')
 
-    ax.set(xlabel='Número de celulas', ylabel='Celulas evaluadas por segundo (tpb)',
-       title='Evaluacion del programa en GPU con diferentes threads por bloque (tpb) con CUDA')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Evaluación del programa en GPU con diferentes threads por bloque (tpb) con CUDA')
     ax.grid()
 
     ax.legend()

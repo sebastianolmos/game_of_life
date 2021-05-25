@@ -24,7 +24,7 @@ if __name__ == "__main__":
     print(n_size)
     print(n_time)
 
-    n_eval = n_size / n_time
+    n_eval = n_size / n_time / 1000000
 
     print(n_eval)
 
@@ -32,8 +32,8 @@ if __name__ == "__main__":
     ax.set_xscale('log')
     ax.plot(n_size, n_eval, 'r-o')
 
-    ax.set(xlabel='Número de celulas', ylabel='Celulas evaluadas por segundo',
-       title='Tiempo promedio de iteracion con implementación secuencial en CPU 2')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Tiempo promedio de iteración con implementación secuencial en CPU 2')
     ax.grid()
 
     fig.savefig("images/serial_CPU2.png")
