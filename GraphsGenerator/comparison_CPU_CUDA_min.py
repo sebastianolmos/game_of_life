@@ -82,3 +82,30 @@ if __name__ == "__main__":
     ax.legend()
     fig.savefig("images/CPU_CUDA_comparison_min.png")
     plt.show()
+
+    # Zoom
+    n_size1 = n_size1[:len(size1) // 2]
+    n_size2 = n_size2[:len(size2) // 2]
+    n_size3 = n_size3[:len(size3) // 2]
+    n_size4 = n_size4[:len(size4) // 2]
+    n_eval1 = n_eval1[:len(size1) // 2]
+    n_eval2 = n_eval2[:len(size2) // 2]
+    n_eval3 = n_eval2[:len(size3) // 2]
+    n_eval4 = n_eval4[:len(size4) // 2]
+
+    fig, ax = plt.subplots(figsize=(10,7))
+    
+    ax.set_xscale('log')
+
+    line1 = ax.plot(n_size1, n_eval1, 'r-o', label='CPU')
+    line2 = ax.plot(n_size2, n_eval2, 'b-o', label='8 tpb')
+    line3 = ax.plot(n_size3, n_eval3, 'g-o', label='16 tpb')
+    line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
+
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [millones]',
+       title='Comparación de tiempo promedio de iteración entre implementaciones serial en CPU\n y paralela CUDA con número de bloques no múltiplo de 32')
+    ax.grid()
+
+    ax.legend()
+    fig.savefig("images/CPU_CUDA_comparison_min_zoom.png")
+    plt.show()
