@@ -88,12 +88,12 @@ if __name__ == "__main__":
     
     ax.set_xscale('log')
 
-    line32 = ax.plot(n_size, n_eval32, 'b-o', label='32 tbp')
-    line64 = ax.plot(n_size, n_eval64, 'r-o', label='64 tbp')
-    line128 = ax.plot(n_size, n_eval128, 'y-o', label='128 tbp')
-    line256 = ax.plot(n_size, n_eval256, 'g-o', label='256 tbp')
-    line512 = ax.plot(n_size, n_eval512, 'm-o', label='512 tbp')
-    line1024 = ax.plot(n_size, n_eval1024, 'c-o', label='1024 tbp')
+    line32 = ax.plot(n_size, n_eval32, 'b-o', label='32 tpb')
+    line64 = ax.plot(n_size, n_eval64, 'r-o', label='64 tpb')
+    line128 = ax.plot(n_size, n_eval128, 'y-o', label='128 tpb')
+    line256 = ax.plot(n_size, n_eval256, 'g-o', label='256 tpb')
+    line512 = ax.plot(n_size, n_eval512, 'm-o', label='512 tpb')
+    line1024 = ax.plot(n_size, n_eval1024, 'c-o', label='1024 tpb')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
        title='Evaluación del programa en GPU con diferentes threads por bloque (tpb) con CUDA')

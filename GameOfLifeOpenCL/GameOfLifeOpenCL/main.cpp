@@ -47,7 +47,7 @@ int iterator(int argc, char* argv[])
 		worldWidth = 1024;
 		worldHeight = 1024;
 		iterations = 30;
-		threads = 256;
+		threads = 200;
 	}
 	else {
 		worldWidth = atoi(argv[1]);

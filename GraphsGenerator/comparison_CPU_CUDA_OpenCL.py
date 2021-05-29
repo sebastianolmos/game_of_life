@@ -37,7 +37,7 @@ if __name__ == "__main__":
         for row in csv_reader:
             tmp_time = float(row['time']) * 0.001
             time3 += [tmp_time / float(row['iter']) ]
-            print(time2[-1])
+            print(time3[-1])
 
     n_size = np.array(size)
     n_size2 = np.array(size2)
