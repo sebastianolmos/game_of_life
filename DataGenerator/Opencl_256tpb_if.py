@@ -17,9 +17,9 @@ if __name__ == "__main__":
     height = 64
     worlds = 20
     iterations = 5
-    threads = 512
+    threads = 256
 
-    with open('Data/opencl_512tpb_if.csv', mode='w') as csv_file:
+    with open('Data/opencl_256tpb_if.csv', mode='w') as csv_file:
         fieldnames = ['width', 'height', 'iter', 'time']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
