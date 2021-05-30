@@ -75,8 +75,8 @@ if __name__ == "__main__":
     line3 = ax.plot(n_size3, n_eval3, 'g-o', label='16 tpb')
     line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
 
-    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [millones]',
-       title='Comparación de tiempo promedio de iteración entre implementaciones serial en CPU\n y paralela CUDA con número de bloques no múltiplo de 32')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en CUDA con threads por bloque no múltiplo de 32')
     ax.grid()
 
     ax.legend()
@@ -84,14 +84,14 @@ if __name__ == "__main__":
     plt.show()
 
     # Zoom
-    n_size1 = n_size1[:len(size1) // 2]
-    n_size2 = n_size2[:len(size2) // 2]
-    n_size3 = n_size3[:len(size3) // 2]
-    n_size4 = n_size4[:len(size4) // 2]
-    n_eval1 = n_eval1[:len(size1) // 2]
-    n_eval2 = n_eval2[:len(size2) // 2]
-    n_eval3 = n_eval2[:len(size3) // 2]
-    n_eval4 = n_eval4[:len(size4) // 2]
+    n_size1 = n_size1[:len(size1) // 3 + 1]
+    n_size2 = n_size2[:len(size2) // 3]
+    n_size3 = n_size3[:len(size3) // 3]
+    n_size4 = n_size4[:len(size4) // 3]
+    n_eval1 = n_eval1[:len(size1) // 3 + 1]
+    n_eval2 = n_eval2[:len(size2) // 3]
+    n_eval3 = n_eval2[:len(size3) // 3]
+    n_eval4 = n_eval4[:len(size4) // 3]
 
     fig, ax = plt.subplots(figsize=(10,7))
     
@@ -102,8 +102,8 @@ if __name__ == "__main__":
     line3 = ax.plot(n_size3, n_eval3, 'g-o', label='16 tpb')
     line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
 
-    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [millones]',
-       title='Comparación de tiempo promedio de iteración entre implementaciones serial en CPU\n y paralela CUDA con número de bloques no múltiplo de 32')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en CUDA con threads por bloque no múltiplo de 32')
     ax.grid()
 
     ax.legend()

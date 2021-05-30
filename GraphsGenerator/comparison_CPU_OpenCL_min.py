@@ -75,8 +75,8 @@ if __name__ == "__main__":
     line3 = ax.plot(n_size3, n_eval3, 'g-o', label='16 tpb')
     line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
 
-    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [millones]',
-       title='Comparación de tiempo promedio de iteración entre implementaciones serial en CPU\n y paralela OpenCL con número de bloques no múltiplo de 32')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en OpenCL con threads por bloque no múltiplo de 32')
     ax.grid()
 
     ax.legend()
@@ -102,8 +102,8 @@ if __name__ == "__main__":
     line3 = ax.plot(n_size3, n_eval3, 'g-o', label='16 tpb')
     line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
 
-    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [millones]',
-       title='Comparación de tiempo promedio de iteración entre implementaciones serial en CPU\n y paralela OpenCL con número de bloques no múltiplo de 32')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en OpenCL con threads por bloque no múltiplo de 32')
     ax.grid()
 
     ax.legend()

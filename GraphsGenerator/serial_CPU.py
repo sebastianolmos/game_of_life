@@ -33,7 +33,7 @@ if __name__ == "__main__":
     ax.plot(n_size, n_eval, 'r-o')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
-       title='Tiempo promedio de iteración con implementación secuencial en CPU ')
+       title='Células evaluadas por segundo para distintos tamaños de mundo\ncon implementación secuencial en CPU ')
     ax.grid()
 
     fig.savefig("images/serial_CPU.png")

@@ -57,8 +57,8 @@ if __name__ == "__main__":
     line2 = ax.plot(n_size2, n_eval2, 'b-o', label='CUDA')
     line3 = ax.plot(n_size2, n_eval3, 'g-o', label='OpenCL')
 
-    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [millones]',
-       title='Comparación de tiempo promedio de iteración entre implementaciones serial en CPU\n y paralelas en CUDA y OpenCL')
+    ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\n y paralelas en CUDA y OpenCL')
     ax.grid()
 
     ax.legend()

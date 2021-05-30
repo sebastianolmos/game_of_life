@@ -96,7 +96,7 @@ if __name__ == "__main__":
     line1024 = ax.plot(n_size, n_eval1024, 'c-o', label='1024 tpb')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
-       title='Evaluación del programa en GPU con diferentes threads por bloque (tpb) con CUDA')
+       title='Comparación de células evaluadas por segundo entre implementaciones\ncon diferentes threads por bloque (tpb) para CUDA')
     ax.grid()
 
     ax.legend()

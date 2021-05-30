@@ -42,10 +42,10 @@ if __name__ == "__main__":
     ax.set_xscale('log')
 
     line = ax.plot(n_size, n_eval, 'b-o', label='Implementación sin if statements')
-    line_if = ax.plot(n_size, n_eval_if, 'r-o', label=' Implementación usando if statements')
+    line_if = ax.plot(n_size, n_eval_if, 'r-o', label=' Implementación con if statements')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
-       title='Comparación de tiempo promedio de iteración entre implementaciones \n paralelas en CUDA con 128 tpb')
+       title='Comparación de células evaluadas por segundo entre implementaciones\nparalelas en CUDA y su variación con if statements')
     ax.grid()
 
     ax.legend()

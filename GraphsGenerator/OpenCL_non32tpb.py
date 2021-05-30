@@ -169,7 +169,7 @@ if __name__ == "__main__":
     line729 = ax.plot(n_size3, n_eval729, color='#e6194B', marker='o', label='729 tpb')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
-       title='Evaluación del programa en GPU con diferentes threads por bloque (tpb) con OpenCL')
+       title='Comparación de células evaluadas por segundo entre implementaciones\ncon threads por bloque (tpb) no múltiplo de 32 para OpenCL')
     ax.grid()
 
     ax.legend()
