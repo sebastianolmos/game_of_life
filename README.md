@@ -43,3 +43,8 @@ Posteriormente buildear.
 Para ejecutar los códigos con los scripts que registran los resultados es necesario buildear la solución previamente y luego ejecutar el script deseado con Python.
 
 Los resultados estarán en el archivo ```.csv``` correspondiente.
+
+### Obtención de gráficos
+Ejecutar con Python el script generador deseado. 
+
+La figura estará en el archivo ```.png``` correspondiente.
