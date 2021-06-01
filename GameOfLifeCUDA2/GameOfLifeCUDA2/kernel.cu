@@ -120,8 +120,8 @@ int main(int argc, char* argv[])
 
     if (argc < 5)
     {
-        worldWidth = 1000;
-        worldHeight = 1000;
+        worldWidth = 1024;
+        worldHeight = 1024;
         iterations = 10;
         threads = 32;
     }
@@ -192,6 +192,26 @@ int main(int argc, char* argv[])
     if (err != cudaSuccess)
     {
         fprintf(stderr, "Failed to launch game kernel (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    // Se libera memoria en host
+    delete[] h_data;
+    delete[] h_resultData;
+
+    // Se libera memoria en device
+
+    err = cudaFree(d_data);
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to free device vector data (error code %s)!\n", cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+
+    err = cudaFree(d_resultData);
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Failed to free device vector resultData (error code %s)!\n", cudaGetErrorString(err));
         exit(EXIT_FAILURE);
     }
 

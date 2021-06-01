@@ -86,8 +86,10 @@ int main(int argc, char* argv[])
     // Se ejecuta el juego
     double gameTime = runGameLife();
     // nanoseconds
-    // microseconds
-    // milliseconds
+
+    // Se libera memoria
+    delete[] data;
+    delete[] resultData;
 
     std::cout << gameTime;
 }

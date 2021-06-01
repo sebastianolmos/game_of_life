@@ -47,7 +47,7 @@ int iterator(int argc, char* argv[])
 		worldWidth = 1024;
 		worldHeight = 1024;
 		iterations = 30;
-		threads = 200;
+		threads = 32;
 	}
 	else {
 		worldWidth = atoi(argv[1]);
@@ -126,12 +126,6 @@ int iterator(int argc, char* argv[])
 		// Make kernel
 		cl::Kernel gameKernel_kernel(program, "gameKernel");
 
-		// Set the kernel arguments
-		// gameKernel_kernel.setArg(0, d_data);
-		// gameKernel_kernel.setArg(1, d_resultData);
-		// gameKernel_kernel.setArg(2, d_worldWidth);
-		// gameKernel_kernel.setArg(3, d_worldHeight);
-
 		double totalTime = 0.0;
 		for (size_t i = 0; i < iterations; i++){
 			// Set the kernel arguments
@@ -160,39 +154,12 @@ int iterator(int argc, char* argv[])
 			itime = (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
 			totalTime += itime;
 		}
-		/*
-		// Execute the kernel
-		// cl::NDRange global(dataLength);
-		// cl::NDRange local(threads);
 
-		double itime = 0.0;
-		auto start = std::chrono::steady_clock::now();
-
-		queue.enqueueNDRangeKernel(gameKernel_kernel, cl::NullRange, global, local);
-		queue.finish();
-
-		auto end = std::chrono::steady_clock::now();
-		itime = (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-		*/
 		std::cout << totalTime << std::endl;
 
 		// Copy the output data back to the host
 		queue.enqueueReadBuffer(d_resultData, CL_TRUE, 0, size, h_resultData);
 
-		/*
-		// Verify the result
-		bool result = true;
-		for (int i = 0; i < N_ELEMENTS; i++) {
-			if (C[i] != A[i] + B[i]) {
-				result = false;
-				break;
-			}
-		}
-		if (result)
-			std::cout << "Success!\n";
-		else
-			std::cout << "Failed!\n";
-		*/
 	}
 	catch (cl::Error err) {
 		std::cout << "Error: " << err.what() << "(" << err.err() << ")" << std::endl;
