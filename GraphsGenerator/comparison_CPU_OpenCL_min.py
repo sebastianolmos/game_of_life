@@ -76,7 +76,7 @@ if __name__ == "__main__":
     line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
-       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en OpenCL con threads por bloque no múltiplo de 32')
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en OpenCL')
     ax.grid()
 
     ax.legend()
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     line3 = ax.plot(n_size4, n_eval4, 'y-o', label='32 tpb')
 
     ax.set(xlabel='Tamaño del mundo [Células]', ylabel='Células evaluadas por segundo [Millones]',
-       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en OpenCL con threads por bloque no múltiplo de 32')
+       title='Comparación de células evaluadas por segundo entre implementaciones serial en CPU\ny paralela en OpenCL [Vista ampliada]')
     ax.grid()
 
     ax.legend()
