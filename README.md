@@ -1,6 +1,12 @@
 # Juego de la Vida de Conway
 
-Análisis comparativo de versiones seriales y paralelas del Juego de la Vida de Conway, implementadas en C++ y desarrolladas en Visual Studio 2019, correspondiente a la Tarea 2 del curso Computación en GPU (CC7515). Las soluciones implementadas corresponden a una versión serial en CPU y dos paralelas en GPU, usando CUDA y OpenCL respectivamente.
+Análisis comparativo de versiones seriales y paralelas del Juego de la Vida de Conway, implementadas en C++ y desarrolladas en Visual Studio 2019, correspondiente a la Tarea 2 del curso Computación en GPU (CC7515). Las soluciones implementadas corresponden a una versión serial en CPU y dos paralelas en GPU, usando CUDA y OpenCL respectivamente. Ademas se agregar una visualización del juego de la vida basado en el [proyecto](http://www.marekfiser.com/Projects/Conways-Game-of-Life-on-GPU-using-CUDA) de Marek Fiser, programado en C++ y renderizado con OpenGL 3.3, disponible en el directorio [GameOfLifeVisualization](./GameOfLifeVisualization).
+
+Ejemplos de la visualizacion del juego con postprocessing para remarcar el estado de cada celda.
+
+[![ex_color_palette.py](./captures/gol128.gif)](./GameOfLifeVisualization)
+
+[![ex_color_palette.py](./captures/gol512_2.gif)](./GameOfLifeVisualization)
 
 ## Descripción
 A continuación se presentará una descripción de los directorios.
