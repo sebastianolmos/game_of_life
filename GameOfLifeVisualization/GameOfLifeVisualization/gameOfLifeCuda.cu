@@ -98,7 +98,7 @@ extern "C"
 
     /// Runs a kernel for rendering of life world on the screen.
     void runDisplayLifeKernel(const ubyte* d_lifeData, size_t worldWidth, size_t worldHeight, uchar4* destination,
-        int destWidth, int destHeight) {
+        int destWidth, int destHeight, bool simulateColors) {
 
         ushort threadsCount = 256;
         assert((worldWidth * worldHeight) % threadsCount == 0);
@@ -106,7 +106,7 @@ extern "C"
         assert(reqBlocksCount < 65536);
         ushort blocksCount = (ushort)reqBlocksCount;
         displayLifeKernel << <blocksCount, threadsCount >> > ((ubyte*)d_lifeData, uint(worldWidth), uint(worldHeight), (uchar4*)destination,
-            destWidth, destHeight);
+            destWidth, destHeight, simulateColors);
         cudaDeviceSynchronize();
     }
 

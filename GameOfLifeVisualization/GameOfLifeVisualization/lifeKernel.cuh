@@ -31,10 +31,9 @@ __global__ void gameKernel(const ubyte* data, ubyte* resultData, uint worldWidth
 	/// CUDA kernel for rendering of life world on the screen.
 	/// This kernel transforms bit-per-cell life world to ARGB screen buffer.
 __global__ void displayLifeKernel(const ubyte* lifeData, uint worldWidth, uint worldHeight, uchar4* destination,
-	int destWidth, int detHeight) {
+	int destWidth, int detHeight, bool simulateColors) {
 
 	int multisample = 1;
-	bool simulateColors = true;
 	bool cyclic = false;
 	bool bitLife = false;
 
@@ -81,10 +80,16 @@ __global__ void displayLifeKernel(const ubyte* lifeData, uint worldWidth, uint w
 		if (value > 0) {
 			if (destination[pixelId].w > 0) {
 				// Stayed alive - get darker.
-				if (destination[pixelId].y > 85) {
-					--destination[pixelId].x;
-					--destination[pixelId].y;
-					--destination[pixelId].z;
+				if (destination[pixelId].y > 145) {
+					destination[pixelId].x -= 2;
+					destination[pixelId].y -= 2;
+					destination[pixelId].z -= 2;
+				}
+				else
+				{
+					destination[pixelId].x = 145;
+					destination[pixelId].y = 145;
+					destination[pixelId].z = 145;
 				}
 			}
 			else {
@@ -97,27 +102,27 @@ __global__ void displayLifeKernel(const ubyte* lifeData, uint worldWidth, uint w
 		else {
 			if (destination[pixelId].w > 0) {
 				// Died - dark green.
-				destination[pixelId].x = 0;
-				destination[pixelId].y = 150;
+				destination[pixelId].x = 255;
+				destination[pixelId].y = 0;
 				destination[pixelId].z = 0;
 			}
 			else {
 				// Stayed dead - get darker.
-				if (destination[pixelId].y > 24) {
+				if (destination[pixelId].x > 33) {
 					if (isNotOnBoundary) {
 					}
-					destination[pixelId].y -= 8;
+					destination[pixelId].x -= 16;
 				}
 				else {
-					destination[pixelId].x = 0;
-					destination[pixelId].y = 24;
+					destination[pixelId].x = 32;
+					destination[pixelId].y = 0;
 					destination[pixelId].z = 0;
 				}
 			}
 		}
 	}
 	else {
-		destination[pixelId].x = isNotOnBoundary ? value : 255;
+		destination[pixelId].x = value;
 		destination[pixelId].y = value;
 		destination[pixelId].z = value;
 	}

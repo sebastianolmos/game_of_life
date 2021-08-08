@@ -32,6 +32,7 @@ float IterPerSeconds = 20.0f;
 float deltaTime = 0.0f;
 glm::vec3 translate = glm::vec3(0.0f);
 float scale = 1.0f;
+bool simulateColors = true;
 
 Controller* controller = new Controller(1.0f, 7.0f, 10.0f);
 
@@ -230,20 +231,13 @@ int main(int argc, char* argv[])
     float timeCounter = 0.0f;
     bool swapBuffers = false;
 
-
-    // PBO Map
-           // ------
-    cudaGraphicsMapResources(1, &cudaPboResource, 0);
+    // CLEAN the device Buffer before render
+    // -----------
+    cudaGraphicsMapResources(1, &cudaPboResource, 0); // PBO Map
     size_t num_bytes;
     cudaGraphicsResourceGetMappedPointer((void**)&d_textureBufferData, &num_bytes, cudaPboResource);
-
-    // Display kernel call
-    // ------
-    cleanBufferInDevice(d_textureBufferData, worldWidth, worldHeight);
-
-    // PBO UnMap
-    // ------
-    cudaGraphicsUnmapResources(1, &cudaPboResource, 0);
+    cleanBufferInDevice(d_textureBufferData, worldWidth, worldHeight); // clean Buffer kernel call
+    cudaGraphicsUnmapResources(1, &cudaPboResource, 0); // PBO UnMap
 
     PerformanceMonitor pMonitor(glfwGetTime(), 0.5f);
 
@@ -285,7 +279,7 @@ int main(int argc, char* argv[])
 
             // Display kernel call
             // ------
-            runDisplayLifeKernel(d_resultData, worldWidth, worldHeight, d_textureBufferData, worldWidth, worldHeight);
+            runDisplayLifeKernel(d_resultData, worldWidth, worldHeight, d_textureBufferData, worldWidth, worldHeight, simulateColors);
 
             // PBO UnMap
             // ------
@@ -382,6 +376,10 @@ int main(int argc, char* argv[])
 // ----------------------------------------
 void key_callback_wrapper(GLFWwindow* window, int key, int scancode, int action, int mods) {
     controller->key_callback(window, key, scancode, action, mods);
+    if (action == GLFW_PRESS && key == GLFW_KEY_P)
+    {
+        simulateColors = !simulateColors;
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

@@ -23,7 +23,7 @@ extern "C"
     void runGameInDevice(ubyte*& d_data, ubyte*& d_resultData, size_t worldWidth, size_t worldHeight, ushort threads);
 
     void runDisplayLifeKernel(const ubyte* d_lifeData, size_t worldWidth, size_t worldHeight, uchar4* destination,
-        int destWidth, int destHeight);
+        int destWidth, int destHeight, bool simulateColors);
 
     void cleanBufferInDevice(uchar4* buffer, size_t width, size_t height);
 }
