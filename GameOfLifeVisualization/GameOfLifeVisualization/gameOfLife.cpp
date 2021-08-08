@@ -34,7 +34,7 @@ glm::vec3 translate = glm::vec3(0.0f);
 float scale = 1.0f;
 bool simulateColors = true;
 
-Controller* controller = new Controller(1.0f, 2.0f, 10.0f);
+Controller* controller = new Controller(1.0f, 1.0f, 10.0f);
 
 
 int main(int argc, char* argv[])
@@ -54,16 +54,16 @@ int main(int argc, char* argv[])
 
     if (argc < 5)
     {
-        worldWidth = 128;
-        worldHeight = 128;
+        worldWidth = 256;
+        worldHeight = 256;
         threads = 64;
-        distance = 32;
+        distance = 100;
     }
     else {
         worldWidth = atoi(argv[1]);
         worldHeight = atoi(argv[2]);
-        threads = atoi(argv[4]);
-        distance = atoi(argv[5]);
+        threads = atoi(argv[3]);
+        distance = atoi(argv[4]);
     }
     SCR_WIDTH = (int)(worldWidth/ worldHeight)*SCR_WIDTH;
 

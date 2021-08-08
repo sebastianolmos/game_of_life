@@ -35,7 +35,6 @@ __global__ void displayLifeKernel(const ubyte* lifeData, uint worldWidth, uint w
 
 	int multisample = 1;
 	bool cyclic = false;
-	bool bitLife = false;
 
 	uint pixelId = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -56,21 +55,10 @@ __global__ void displayLifeKernel(const ubyte* lifeData, uint worldWidth, uint w
 	int value = 0;  // Start at value - 1.
 	int increment = 255 / (multisample * multisample);
 
-	if (bitLife) {
-		for (int dy = 0; dy < multisample; ++dy) {
-			int yAbs = (y + dy) * worldWidth;
-			for (int dx = 0; dx < multisample; ++dx) {
-				int xBucket = yAbs + x + dx;
-				value += ((lifeData[xBucket >> 3] >> (7 - (xBucket & 0x7))) & 0x1) * increment;
-			}
-		}
-	}
-	else {
-		for (int dy = 0; dy < multisample; ++dy) {
-			int yAbs = (y + dy) * worldWidth;
-			for (int dx = 0; dx < multisample; ++dx) {
-				value += lifeData[yAbs + (x + dx)] * increment;
-			}
+	for (int dy = 0; dy < multisample; ++dy) {
+		int yAbs = (y + dy) * worldWidth;
+		for (int dx = 0; dx < multisample; ++dx) {
+			value += lifeData[yAbs + (x + dx)] * increment;
 		}
 	}
 
