@@ -70,11 +70,11 @@ void Controller::updateParams(float deltaTime) {
     }
 
     if (m_is_z_pressed) {
-        *m_scale -= deltaTime * m_zoomSpeed;
+        *m_scale -= deltaTime * m_zoomSpeed * (*m_scale);
     }
     else if (m_is_x_pressed)
     {
-        *m_scale += deltaTime * m_zoomSpeed;;
+        *m_scale += deltaTime * m_zoomSpeed * (*m_scale);
     }
 
     if (m_is_left_pressed) {

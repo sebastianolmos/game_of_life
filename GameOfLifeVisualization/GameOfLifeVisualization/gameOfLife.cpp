@@ -34,7 +34,7 @@ glm::vec3 translate = glm::vec3(0.0f);
 float scale = 1.0f;
 bool simulateColors = true;
 
-Controller* controller = new Controller(1.0f, 7.0f, 10.0f);
+Controller* controller = new Controller(1.0f, 2.0f, 10.0f);
 
 
 int main(int argc, char* argv[])
@@ -306,8 +306,8 @@ int main(int argc, char* argv[])
         // transformation 
         // --------
         glm::mat4 transform = glm::mat4(1.0f);
-        transform = glm::translate(transform, translate);
         transform = glm::scale(transform, glm::vec3(scale, scale, 1.0f));
+        transform = glm::translate(transform, translate);
 
         // render the quad
         // --------
