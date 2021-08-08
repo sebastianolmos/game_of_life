@@ -4,9 +4,11 @@ Análisis comparativo de versiones seriales y paralelas del Juego de la Vida de 
 
 Ejemplos de la visualizacion del juego con postprocessing para remarcar el estado de cada celda.
 
-[![ex_color_palette.py](./captures/gol128.gif)](./GameOfLifeVisualization)
+## Muestras
+Simulating an indirect color scheme with matplotlib
+[![128_world](./captures/gol128.gif)](./GameOfLifeVisualization)
 
-[![ex_color_palette.py](./captures/gol512_2.gif)](./GameOfLifeVisualization)
+[![512_world](./captures/gol512_2.gif)](./GameOfLifeVisualization)
 
 ## Descripción
 A continuación se presentará una descripción de los directorios.
