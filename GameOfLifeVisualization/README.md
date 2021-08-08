@@ -7,10 +7,10 @@ Si esta activado el postprocessing, las celdas blancas son las que acaban de cam
 ## Muestras
 
 Visualizando un mundo de 1024 x 1024 en distintas escalas
-![scale](./captures/gol_scale.gif)
+![scale](../captures/gol_scale.gif)
 
 Visualizando el juego con y sin postprocessing
-![postprocessing](./captures/gol_pros.gif)
+![postprocessing](../captures/gol_pros.gif)
 
 ## Librerías usadas
 Se uso el lenguaje C++ con la siguientes librerias:
