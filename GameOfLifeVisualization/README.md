@@ -7,9 +7,11 @@ Si esta activado el postprocessing, las celdas blancas son las que acaban de cam
 ## Muestras
 
 Visualizando un mundo de 1024 x 1024 en distintas escalas
+
 ![scale](../captures/gol_scale.gif)
 
 Visualizando el juego con y sin postprocessing
+
 ![postprocessing](../captures/gol_pros.gif)
 
 ## Librerías usadas
@@ -50,4 +52,14 @@ Donde:
 ## Controles:
 
 Los controles de teclado son:
-- [SCAPE] Salir de la aplicación
+- [ESCAPE] Salir de la aplicación
+- [SPACE] Reiniciar la traslación y la escala
+- [W] Moverse hacia arriba del mundo
+- [S] Moverse hacia abajo del mundo
+- [A] Moverse hacia la izquierda del mundo
+- [D] Moverse hacia la derecha del mundo
+- [Z] Disminuir zoom
+- [ X ] Aumentar zoom
+- [LEFT] Disminuir el número de iteraciones por segundo
+- [RIGHT] Aumentar el número de iteraciones por segundo
+- [P] Activar / Desactivar post processing
